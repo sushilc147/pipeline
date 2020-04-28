@@ -11,6 +11,7 @@ pipeline {
 
       steps {
         //sh "cd back-end && bin/ci"
+        sh "cat /etc/os-release"
         sh "ls -la /var/lib/jenkins/workspace"
       }
     }
@@ -26,6 +27,7 @@ pipeline {
         //sh "rm -f front-end/node_modules && ln -s /app/node_modules front-end/node_modules"
         //sh "cd front-end && bin/ci"
         sh "ls -la /var/lib/jenkins/workspace"
+        sh "cat /etc/os-release"
       }
     }
   }
