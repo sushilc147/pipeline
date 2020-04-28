@@ -5,7 +5,7 @@ pipeline {
     stage("Test back end") {
       agent {
         dockerfile {
-          filename "back-end/dockerfiles/ci/Dockerfile"
+          filename "Dockerfile"
         }
       }
 
