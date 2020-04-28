@@ -1,4 +1,0 @@
-{
-  "environment": "test",
-  "apiBaseUrl": "http://non-existing-test-server/api"
-}

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-pylint -E app tests
-black --check app tests
-pytest --cov=app

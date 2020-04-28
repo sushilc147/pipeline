@@ -1,4 +1,0 @@
-{
-  "environment": "development",
-  "apiBaseUrl": "http://localhost:8000/api"
-}
