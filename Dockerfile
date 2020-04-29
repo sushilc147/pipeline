@@ -22,7 +22,8 @@ RUN apk update && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/* && \
     rm -rf /var/tmp/*
-    terraform plan
+    
+RUN terraform init
 
 ENV PATH = $PATH:/usr/local/google-cloud-sdk/bin/
 
