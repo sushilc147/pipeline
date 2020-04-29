@@ -6,7 +6,7 @@ pipeline {
             args '--entrypoint=\'\''
         }
     }
-    stages {
+    /*stages {
         stage('Test') {
             steps {
                 //sh 'java -version'
@@ -14,13 +14,17 @@ pipeline {
                 echo "hello from the other side"
             }
         }
-    }           
-    stage('Initialize'){
-         steps {   
-            def dockerHome = tool 'myDocker'
-            env.PATH = "${dockerHome}/bin:${env.PATH}"
-             sh 'docker images'
-             echo "==========x=========="
-                  }
+    }*/
+    stages {
+        stage('Build image') {
+            steps {
+                echo 'Starting to build docker image'
+
+                script {
+                    def customImage = docker.build("my-image:${env.BUILD_ID}")
+                    customImage.push()
+                }
+            }
+        }
     }
 }
