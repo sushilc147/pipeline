@@ -10,6 +10,7 @@ pipeline {
         stage('Test') {
             steps {
                 //sh 'java -version'
+                sh 'docker images' 
                 echo "hello from the other side"
             }
         }
