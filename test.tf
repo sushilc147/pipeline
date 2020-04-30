@@ -11,9 +11,9 @@ variable "secretKey" {
 }
 
 provider "aws" {
-  skip_requesting_account_id = true
-  #access_key = "${var.accessKey}"
-  #secret_key = "${var.secretKey}"
+  #skip_requesting_account_id = true
+  access_key = "${var.accessKey}"
+  secret_key = "${var.secretKey}"
   region     = "us-east-2"
 }
 
