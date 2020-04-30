@@ -14,7 +14,7 @@ provider "aws" {
   skip_requesting_account_id = true
   #access_key = "${var.accessKey}"
   #secret_key = "${var.secretKey}"
-  #region     = "us-east-2"
+  region     = "us-east-2"
 }
 
 resource "aws_instance" "example" {
