@@ -35,5 +35,6 @@ RUN echo $access_key
 RUN echo $secret_key
 ENTRYPOINT ["/main.tf"]
 RUN terraform init -var accessKey=$access_key -var secretKey=$secret_key
-RUN terraform plan -var accessKey=$access_key -var secretKey=$secret_key -out
+#RUN terraform plan -var accessKey=$access_key -var secretKey=$secret_key -out
+RUN terraform show tfplan -var accessKey=$access_key -var secretKey=$secret_key -out
 #RUN terraform apply -var accessKey=$access_key -var secretKey=$secret_key -auto-approve
