@@ -1,33 +1,41 @@
-FROM alpine:3.10
+FROM ubuntu:16.04
 
-ENV TERRAFORM_VERSION=0.12.21
+ARG TAG=swan
+ENV env_var_name=$TAG
 
-VOLUME ["/data"]
+ARG AWS_ACCESS_KEY_ID=test
+ENV access_key=$AWS_ACCESS_KEY_ID
 
-WORKDIR /data
+ARG AWS_SECRET_ACCESS_KEY=test2
+ENV secret_key=$AWS_SECRET_ACCESS_KEY
 
-ENTRYPOINT ["/usr/bin/terraform"]
+RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+  && rm -rf /var/lib/apt/lists/*
+  
+RUN wget --quiet https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip \
+  && unzip terraform_0.11.3_linux_amd64.zip \
+  && mv terraform /usr/bin \
+  && rm terraform_0.11.3_linux_amd64.zip
 
-CMD ["--help"]
+#COPY ./abc /$TAG/
+RUN echo $TAG
 
-RUN apk update && \
-    apk add curl jq python bash ca-certificates git openssl unzip wget && \
-    cd /tmp && \
-    wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/bin && \
-    wget https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.zip -O /tmp/google-cloud-sdk.zip && \
-    cd /usr/local && unzip /tmp/google-cloud-sdk.zip && \
-    google-cloud-sdk/install.sh --usage-reporting=false --path-update=true --bash-completion=true && \
-    google-cloud-sdk/bin/gcloud config set --installation component_manager/disable_update_check true && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/* && \
-    rm -rf /var/tmp/*
-    
-RUN terraform init
+#COPY ./abc /$env_var_name/
+RUN echo $env_var_name
 
-ENV PATH = $PATH:/usr/local/google-cloud-sdk/bin/
+#COPY ./abc /$TAG/
+COPY ./test.tf /$TAG/
+WORKDIR /tmp/
+RUN echo "hello"
+RUN echo `pwd`
+RUN echo `ls -las`
 
-ARG VCS_REF
+RUN echo $access_key
 
-LABEL org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url="https://github.com/broadinstitute/docker-terraform"
+RUN echo $secret_key
+
+RUN terraform init -var accessKey=$access_key -var secretKey=$secret_key
+RUN terraform plan -var accessKey=$access_key -var secretKey=$secret_key -out
+#RUN terraform apply -var accessKey=$access_key -var secretKey=$secret_key -auto-approve
