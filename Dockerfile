@@ -1,40 +1,24 @@
-FROM ubuntu:16.04
+FROM golang:1.11-alpine AS build
 
-ARG TAG=swan
-ENV env_var_name=$TAG
+# Install tools required for project
+# Run `docker build --no-cache .` to update dependencies
+RUN apk add --no-cache git
+RUN go get github.com/golang/dep/cmd/dep
 
-ARG AWS_ACCESS_KEY_ID=test
-ENV access_key=$AWS_ACCESS_KEY_ID
+# List project dependencies with Gopkg.toml and Gopkg.lock
+# These layers are only re-built when Gopkg files are updated
+COPY Gopkg.lock Gopkg.toml /go/src/project/
+WORKDIR /go/src/project/
+# Install library dependencies
+RUN dep ensure -vendor-only
 
-ARG AWS_SECRET_ACCESS_KEY=test2
-ENV secret_key=$AWS_SECRET_ACCESS_KEY
+# Copy the entire project and build it
+# This layer is rebuilt when a file changes in the project directory
+COPY . /go/src/project/
+RUN go build -o /bin/project
 
-RUN apt-get update && apt-get install -y \
-    wget \
-    unzip \
-  && rm -rf /var/lib/apt/lists/*
-  
-RUN wget --quiet https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip \
-  && unzip terraform_0.11.3_linux_amd64.zip \
-  && mv terraform /usr/bin \
-  && rm terraform_0.11.3_linux_amd64.zip
-
-#COPY ./abc /$TAG/
-RUN echo $TAG
-
-#COPY ./abc /$env_var_name/
-RUN echo $env_var_name
-
-#COPY ./abc /$TAG/
-COPY ./main.tf /$TAG/
-WORKDIR /tmp/
-RUN echo "hello"
-RUN echo `pwd`
-RUN echo `ls -las`
-RUN echo $access_key
-RUN echo $secret_key
-ENTRYPOINT ["/main.tf"]
-#RUN terraform init -var accessKey=$access_key -var secretKey=$secret_key
-#RUN terraform plan -var accessKey=$access_key -var secretKey=$secret_key -out=plan
-#RUN terraform apply -var accessKey=$access_key -var secretKey=$secret_key -auto-approve
-RUN echo 'dockerfile end'
+# This results in a single layer image
+FROM scratch
+COPY --from=build /bin/project /bin/project
+ENTRYPOINT ["/bin/project"]
+CMD ["--help"]
