@@ -11,7 +11,6 @@ pipeline {
 	 stages {
 		 stage('checkout') {
 			 steps {
-			  //git(url: 'https://github.com/gvsubbareddy/tf_test.git')
 			  git([url: 'https://github.com/sushilc147/pipeline.git', branch: 'master', credentialsId: 'git-cred'])
 			 
 			 }
