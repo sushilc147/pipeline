@@ -26,7 +26,7 @@ RUN echo $TAG
 RUN echo $env_var_name
 
 #COPY ./abc /$TAG/
-COPY ./test.tf /$TAG/
+COPY ./main.tf /$TAG/
 WORKDIR /tmp/
 RUN echo "hello"
 RUN echo `pwd`
