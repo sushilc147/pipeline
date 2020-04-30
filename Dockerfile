@@ -33,7 +33,6 @@ RUN echo `pwd`
 RUN echo `ls -las`
 RUN echo $access_key
 RUN echo $secret_key
-ENTRYPOINT ["/main.tf"]
 #RUN terraform init -var accessKey=$access_key -var secretKey=$secret_key
 #RUN terraform plan -var accessKey=$access_key -var secretKey=$secret_key -out=plan
 #RUN terraform apply -var accessKey=$access_key -var secretKey=$secret_key -auto-approve
