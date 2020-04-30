@@ -11,7 +11,7 @@ pipeline {
 	 stages {
 		 stage('checkout') {
 			 steps {
-			  git([url: 'https://github.com/sushilc147/pipeline.git', branch: 'test', credentialsId: 'git-cred'])
+			  git([url: 'https://github.com/sushilc147/pipeline.git', branch: 'test', credentialsId: 'gittocken'])
 			 
 			 }
 		 }
